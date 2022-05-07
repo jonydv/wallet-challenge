@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Wallet } from './wallet.model';
+import { CreateWalletDto } from './dto/create-wallet.dto';
 
 @Injectable()
 export class WalletsService {
@@ -22,6 +23,16 @@ export class WalletsService {
            throw new NotFoundException(`The wallet with the id: ${id} not found`);
         }
         return wallet;
+    }
+
+    async createWallet(createWalletDto: CreateWalletDto) {
+        try{
+            const wallet = await new this.walletModel(createWalletDto).save();
+            return wallet;
+        }catch(error){
+            throw new HttpException(error.message, HttpStatus.CONFLICT);
+        }
+
     }
 
     async deleteWalletById(id: string) {
