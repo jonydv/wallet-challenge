@@ -24,4 +24,22 @@ export class WalletsService {
         return wallet;
     }
 
+    async deleteWalletById(id: string) {
+    //We do´nt delete the wallet of the DB, we change the state to false, so in the future we can recover
+        const wallet = await this.walletModel.findByIdAndUpdate(
+            id,
+            {
+                state: false
+            },
+            //We return the new state of the wallet in the database
+            {
+                new: true
+            }
+        );
+        if(!wallet){
+            throw new NotFoundException(`The wallet with the id: ${id} not found`);
+        }
+
+        return wallet;
+    }
 }
