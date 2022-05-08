@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { WalletsService } from './wallets.service';
 import { CreateWalletDto } from './dto/create-wallet.dto';
 import { WalletAddressValidationPipe } from '../pipes/wallet-address-validation.pipe';
@@ -25,5 +25,10 @@ export class WalletsController {
     @Delete('/:id')
     deleteWalletById(@Param('id') id: string) {
         return this.walletsService.deleteWalletById(id);
+    }
+
+    @Put(':id')
+    updateIsFavoriteWallet(@Param('id') id: string) {
+        return this.walletsService.updateIsFavoriteWallet(id);
     }
 }

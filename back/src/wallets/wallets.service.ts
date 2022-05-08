@@ -20,12 +20,12 @@ export class WalletsService {
     }
 
     async getWalletById(id: string) {
-        const wallet = await this.walletModel.findById(id);
-        console.log(wallet)
-        if(!wallet){
-           throw new NotFoundException(`The wallet with the id: ${id} not found`);
+        try{
+            const wallet = await this.walletModel.findById(id);
+            return wallet;
+        }catch(error){
+            throw new HttpException(error.message, HttpStatus.CONFLICT);
         }
-        return wallet;
     }
 
     async createWallet(createWalletDto: CreateWalletDto) {
@@ -45,20 +45,35 @@ export class WalletsService {
 
     async deleteWalletById(id: string) {
     //We do´nt delete the wallet of the DB, we change the state to false, so in the future we can recover
-        const wallet = await this.walletModel.findByIdAndUpdate(
-            id,
-            {
-                state: false
-            },
-            //We return the new state of the wallet in the database
-            {
-                new: true
-            }
-        );
-        if(!wallet){
-            throw new NotFoundException(`The wallet with the id: ${id} not found`);
+        try{
+            const wallet = await this.walletModel.findByIdAndUpdate(
+                id,
+                {
+                    state: false
+                },
+                //We return the new state of the wallet in the database
+                {
+                    new: true
+                }
+            );
+            return wallet;
+        }catch(error){
+            throw new HttpException(error.message, HttpStatus.CONFLICT);
         }
-
-        return wallet;
+       
     }
+
+    async updateIsFavoriteWallet(id: string) {
+        try{
+            const wallet = await this.walletModel.findByIdAndUpdate(
+                id,
+                [{$set:{isFavorite:{$eq:[false,"$isFavorite"]}}}],
+                {new: true}
+            );
+            return wallet;
+        }catch(error){
+            throw new HttpException(error.message, HttpStatus.CONFLICT);
+        }
+    }
+
 }
