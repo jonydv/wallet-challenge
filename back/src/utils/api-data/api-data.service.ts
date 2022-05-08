@@ -16,7 +16,7 @@ export class ApiDataService {
         private dateService: DateService
         ) {}
 
-    createWalletWithHisOldValue(wallet: CreateWalletDto): Observable<CreateWalletDto> {
+    createWalletWithHisIsOldValue(wallet: CreateWalletDto): Observable<CreateWalletDto> {
         //We make the call to the url with the query endblock=1 to get only the last transaction and consult his timeStamp
         const { address } = wallet;
         const url = 
