@@ -31,7 +31,6 @@ export class ApiDataService {
                     ];
             }),
             map(([firstTransaction, balance]) => {
-                console.log(balance)
                 firstTransaction > 0 ? wallet.isOld = true : wallet.isOld = false;
                 !!balance ? wallet.balance = balance : wallet.balance = '0'
                 return wallet
