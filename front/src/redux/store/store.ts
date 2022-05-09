@@ -1,14 +1,14 @@
 import { legacy_createStore as createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+import { WalletPayload } from '../../models/wallet-payload.interface';
 import reducers from '../reducers';
 
 export interface AppState {
-    wallets?: any;
-    createWallet?: any;
+    wallets?: WalletPayload;
 }
 
 const initialState = {
-    wallets: {walletInfo: [], loading: false, error: null}
+    wallets: {walletInfo: null, loading: false, error: null}
 };
 
 export const store = createStore(
