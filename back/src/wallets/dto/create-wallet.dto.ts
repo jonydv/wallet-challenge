@@ -8,5 +8,7 @@ export class CreateWalletDto {
     name: string;
 
     isOld: boolean;
+
+    balance: string;
   }
   

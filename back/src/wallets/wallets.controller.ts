@@ -9,13 +9,12 @@ export class WalletsController {
     @Get()
     async getWallets() {
         try{
-            const wallets = await this.walletsService.getAllWallets();
-            return wallets;
+            return await this.walletsService.getAllWallets();
         }catch(error){
             throw new HttpException(error.message, HttpStatus.CONFLICT);
         }
         
-    }
+    };
 
     @Get('/:id')
     async getWalletById(@Param('id') id: string){
