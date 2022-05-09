@@ -1,3 +1,4 @@
+import { RemoveWalletFailAction } from './wallet/wallet-action';
 import {
     GetAllWalletsAction,
     GetAllWalletsFailAction,
@@ -10,7 +11,9 @@ import {
     UpdateIsFavoriteWalletFailAction,
     CreateWalletAction,
     CreateWalletSuccessAction,
-    CreateWalletFailAction
+    CreateWalletFailAction,
+    RemoveWalletAction,
+    RemoveWalletSuccessAction,
 } from './wallet/wallet-action'
 
 export type Action = 
@@ -25,5 +28,8 @@ export type Action =
     UpdateIsFavoriteWalletFailAction |
     CreateWalletAction |
     CreateWalletSuccessAction |
-    CreateWalletFailAction
+    CreateWalletFailAction |
+    RemoveWalletAction |
+    RemoveWalletSuccessAction |
+    RemoveWalletFailAction
 ;

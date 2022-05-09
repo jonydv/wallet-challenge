@@ -1,12 +1,10 @@
 import { combineReducers } from 'redux';
 import { 
-    getWalletsReducer,
-    createWalletReducer
+    walletsReducer,
  } from './wallet/walletReducers';
 
  const reducers = combineReducers({
-     wallets: getWalletsReducer,
-     createWallet: createWalletReducer
+     wallets: walletsReducer
  })
 
  export default reducers;

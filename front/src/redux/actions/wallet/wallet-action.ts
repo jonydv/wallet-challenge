@@ -1,4 +1,5 @@
 import { WalletActionType } from "../../action-types";
+import { WalletI } from '../../../models/wallet.interface';
 
 export interface GetAllWalletsAction {
     type: WalletActionType.WALLET_GET_ALL_REQUEST;
@@ -6,7 +7,7 @@ export interface GetAllWalletsAction {
 
 export interface GetAllWalletsSuccessAction {
     type: WalletActionType.WALLET_GET_ALL_SUCCESS;
-    payload: any;
+    payload: WalletI[];
 }
 
 export interface GetAllWalletsFailAction {
@@ -20,7 +21,7 @@ export interface GetAllWalletsOrderByFavoriteAction {
 
 export interface GetAllWalletsOrderByFavoriteSuccessAction {
     type: WalletActionType.WALLET_GET_ALL_ORDER_BY_FAVORITE_SUCCESS;
-    payload: any;
+    payload: WalletI[];
 }
 
 export interface GetAllWalletsOrderByFavoriteFailAction {
@@ -34,7 +35,7 @@ export interface UpdateIsFavoriteWalletAction {
 
 export interface UpdateIsFavoriteWalletSuccessAction {
     type: WalletActionType.WALLET_UPDATE_ISFAVORITE_SUCCESS;
-    payload: any;
+    payload: WalletI;
 }
 
 export interface UpdateIsFavoriteWalletFailAction {
@@ -48,10 +49,24 @@ export interface CreateWalletAction {
 
 export interface CreateWalletSuccessAction {
     type: WalletActionType.WALLET_CREATE_SUCCESS;
-    payload: any;
+    payload: WalletI;
 }
 
 export interface CreateWalletFailAction {
     type: WalletActionType.WALLET_CREATE_FAIL;
+    payload: any;
+}
+
+export interface RemoveWalletAction {
+    type: WalletActionType.WALLET_REMOVE_REQUEST;
+}
+
+export interface RemoveWalletSuccessAction {
+    type: WalletActionType.WALLET_REMOVE_SUCCESS;
+    payload: WalletI;
+}
+
+export interface RemoveWalletFailAction {
+    type: WalletActionType.WALLET_REMOVE_FAIL;
     payload: any;
 }

@@ -1,9 +1,13 @@
 import { 
     getWallets,
-    createWallet
+    createWallet,
+    updateIsFavoriteWallet,
+    removeWallet
 } from './wallet/wallet-action-creator';
 
 export{
     getWallets,
-    createWallet
+    createWallet,
+    updateIsFavoriteWallet,
+    removeWallet
 }
