@@ -1,10 +1,14 @@
 .wallet{
     max-width: 600px;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     padding: 1rem 0;
     border-bottom: 2px solid #D6D6D6;
+    @media screen and (max-width: 992px){
+        flex-direction: column;
+    }
     &__title{
         width: 100%;
     }
@@ -20,6 +24,12 @@
         padding: 1rem;
         border: 1px solid #D6D6D6;
         border-radius: 5px;
+        @media screen and (max-width: 992px){
+            width: 100%;
+            &:first-of-type{
+                margin-bottom: 1rem;
+            }
+        }
         &-action{
             display: flex;
             justify-content: flex-end;
