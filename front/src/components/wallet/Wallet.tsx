@@ -1,5 +1,6 @@
 import React, { useState }from 'react'
 import { WalletProps } from '../../models/wallet.interface';
+import Web3Utils from 'web3-utils';
 import './Wallet.scss';
 import { useActions } from '../../hooks/useActions';
 
@@ -25,9 +26,9 @@ const Wallet: React.FC<WalletProps> = ({wallet}) => {
   }
   return (
     <div className="wallet">
-    <h3 className="wallet__title">{wallet.name}</h3>
+    <h3 className="wallet__title">Wallet Name: {wallet.name}</h3>
     {
-      !wallet.isOld && 
+      wallet.isOld && 
       <div className="alert alert-danger" role="alert">
         <i className="fa-solid fa-triangle-exclamation"></i>  Wallet is old!
       </div>
@@ -71,7 +72,7 @@ const Wallet: React.FC<WalletProps> = ({wallet}) => {
         <div className="wallet__card-content">
           {
             !showEdit ? 
-              <p className="wallet__card-content-info">1.35</p>
+              <p className="wallet__card-content-info">{Web3Utils.fromWei(wallet.balance!, 'ether')}</p>
             :
               <input type="text" value={1.35} onChange={rateHandler}/>
           }

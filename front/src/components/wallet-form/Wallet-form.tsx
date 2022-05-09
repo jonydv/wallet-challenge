@@ -10,10 +10,17 @@ const WalletForm: React.FC = () => {
   const [address, setAddress] = useState('');
   const [nameError, setNameError] = useState(false);
   const [addressError, setAddressError] = useState(false);
+  const [showForm, setShowForm] = useState (false);
   const { createWallet } = useActions();
   
+  const toggleShowForm = () => {
+    setShowForm(!showForm);
+  }
+
   const submitWallet = (e: SyntheticEvent) => {
     e.preventDefault();
+    const w = Web3Utils.fromWei('351769074352266624264687', 'ether');
+    console.log({w});
     if(name.length < 3 || name.length > 20){
       setNameError(true);
       return;
@@ -23,6 +30,9 @@ const WalletForm: React.FC = () => {
       return;
     }
     createWallet(address, name);
+    setAddress('');
+    setName('');
+    setShowForm(false);
 
 }
 
@@ -36,11 +46,24 @@ const handleAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
 };
   return (
     <>
+      <div className="mb-3">
+                <button 
+                  className="btn btn-outline-info"
+                  onClick={toggleShowForm}
+                >
+                  {!showForm ? 'Add Wallet ' : 'Close Form '} 
+                  {!showForm ? 
+                      <i className="fa-solid fa-plus"></i>
+                    : <i className="fa-solid fa-minus"></i>
+                  }
+                </button>
+      </div>
+    { showForm &&
       <form onSubmit={submitWallet} className="form-container">
       <h3 className="mb-5">Add a new wallet</h3>
             <div className="mb-3">
                 <label className="form-label">Name: </label>
-                <input type="text" className="form-control" placeholder="Name..." 
+                <input type="text" className="form-control" placeholder="Name..." value={name}
                     onChange={handleName}
                 />
                 {
@@ -49,7 +72,7 @@ const handleAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
             </div>
             <div className="mb-3">
                 <label  className="form-label">Address: </label>
-                <input type="text" className="form-control" placeholder="Address" 
+                <input type="text" className="form-control" placeholder="Address"  value={address}
                     onChange={handleAddress}
                 />
                                 {
@@ -60,6 +83,7 @@ const handleAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
                 <button className="btn btn-outline-info">Add Wallet</button>
             </div>
       </form>
+      }
     </>
   )
 }
