@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { map, Observable } from 'rxjs';
+import { combineLatest, map, Observable } from 'rxjs';
 import { Wallet } from 'src/wallets/wallet.model';
 import { CreateWalletDto } from '../../wallets/dto/create-wallet.dto';
 import { DateService } from '../date/date.service';
@@ -16,18 +16,24 @@ export class ApiDataService {
         ) {}
 
     createWalletWithHisIsOldValue(wallet: CreateWalletDto): Observable<CreateWalletDto> {
-        //We make the call to the url with the query endblock=1 to get only the last transaction and consult his timeStamp
+        //We make the call to the url with the query endblock=1 to get only the last transaction and consult his timeStamp and balance
         const { address } = wallet;
-        const url = 
+        const urlIsOld = 
         `${this._apiUrl}?module=account&action=txlist&address=${address}&startblock=0&endblock=1&page=1&offset=10&sort=asc&apikey=${this._apiKey}`;
-
-        return this.http.get(url).pipe(
-            map(response => response.data),
-            map((data: EtherscanNormalTransaction) => {
-                return this.dateService.getYearOldFromTimestamp(Number(data?.result?.[0]?.timeStamp || 0));
+        const urlBalance =
+        `${this._apiUrl}?module=account&action=balance&address=${address}&tag=latest&apikey=${this._apiKey}`;
+        return combineLatest([this.http.get(urlIsOld), this.http.get(urlBalance)]).pipe(
+            map(([responseIsOld, responseBalance]) => [responseIsOld.data,  responseBalance.data]),
+            map(([dataIsOld, dataBalance]) => {
+                return[ 
+                    this.dateService.getYearOldFromTimestamp(Number(dataIsOld?.result?.[0]?.timeStamp || 0)),
+                    dataBalance.result
+                    ];
             }),
-            map(firstTransaction => {
+            map(([firstTransaction, balance]) => {
+                console.log(balance)
                 firstTransaction > 0 ? wallet.isOld = true : wallet.isOld = false;
+                !!balance ? wallet.balance = balance : wallet.balance = '0'
                 return wallet
             })
         );
