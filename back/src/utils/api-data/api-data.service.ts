@@ -1,11 +1,10 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
+import { Wallet } from 'src/wallets/wallet.model';
 import { CreateWalletDto } from '../../wallets/dto/create-wallet.dto';
 import { DateService } from '../date/date.service';
 import { EtherscanNormalTransaction } from './api-data.interface';
-
-
 @Injectable()
 export class ApiDataService {
     private _apiKey: string = process.env.API_KEY;
@@ -32,5 +31,38 @@ export class ApiDataService {
                 return wallet
             })
         );
+    };
+
+    getWalletBalanceFromApi(wallets: Wallet[]): Observable<Wallet[]>{
+        const addresses = wallets.map(wallet => wallet.address).toString();
+        const url =
+        `${this._apiUrl}?module=account&action=balancemulti&address=${addresses}&tag=latest&apikey=${this._apiKey}`;
+
+        return this.http.get(url).pipe(
+            map(response => response.data),
+            map((data: EtherscanNormalTransaction) => {
+               return wallets.map(
+                    (wallet: Wallet, index: number) => 
+                        (wallet.address === data.result[index].account) 
+                        ? {
+                            _id: wallet._id,
+                            isOld: wallet.isOld,
+                            name: wallet.name,
+                            isFavorite: wallet.isFavorite,
+                            address: wallet.address, 
+                            balance: wallet.balance = data.result[index].balance
+                        }
+                        : {
+                            _id: wallet._id,
+                            isOld: wallet.isOld,
+                            name: wallet.name,
+                            isFavorite: wallet.isFavorite,
+                            address: wallet.address,
+                            balance: wallet.balance = '0'
+                    }
+                )
+            }),
+        );
+        
     }
 }

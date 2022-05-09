@@ -5,7 +5,6 @@ import { Wallet } from './wallet.model';
 import { CreateWalletDto } from './dto/create-wallet.dto';
 import { ApiDataService } from '../utils/api-data/api-data.service';
 import { map, Observable } from 'rxjs';
-import { WalletSchema } from './wallet.entity';
 
 @Injectable()
 export class WalletsRepository {
@@ -14,8 +13,9 @@ export class WalletsRepository {
         private apiDataService: ApiDataService
     ) {}
 
-    async getAllWallets(): Promise<Wallet[]>{
-        return await this.walletModel.find();
+    async getAllWallets(): Promise<Observable<Wallet[]>>{
+        const wallets = await this.walletModel.find();
+        return this.apiDataService.getWalletBalanceFromApi(wallets);
     }
 
     async getWalletById(id: string): Promise<Wallet> {
