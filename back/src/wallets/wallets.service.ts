@@ -10,8 +10,12 @@ export class WalletsService {
         private readonly walletRepository: WalletsRepository,
     ) {}
 
-    getAllWallets(sortedByFavorite: boolean): Promise<Observable<Wallet[]>> {
-        return this.walletRepository.getAllWallets(sortedByFavorite);
+    getAllWallets(): Promise<Observable<Wallet[]>> {
+        return this.walletRepository.getAllWallets();
+    }
+
+    getAllWalletsSorted(): Promise<Observable<Wallet[]>> {
+        return this.walletRepository.getWalletsSorted();
     }
 
     getWalletById(id: string): Promise<Wallet> {
