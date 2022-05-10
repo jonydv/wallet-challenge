@@ -13,8 +13,10 @@ export class WalletsRepository {
         private apiDataService: ApiDataService
     ) {}
 
-    async getAllWallets(): Promise<Observable<Wallet[]>>{
-        const wallets = await this.walletModel.find();
+    async getAllWallets(sortedByFavorite: boolean = false): Promise<Observable<Wallet[]>>{
+        const wallets = sortedByFavorite ? 
+            await this.walletModel.find().sort({isFavorite: 'desc'}) 
+            : await this.walletModel.find();
         return this.apiDataService.getWalletBalanceFromApi(wallets);
     }
 

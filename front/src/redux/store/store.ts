@@ -8,7 +8,8 @@ export interface AppState {
 }
 
 const initialState = {
-    wallets: {walletInfo: null, loading: false, error: null}
+    wallets: {walletInfo: null, loading: false, error: null},
+    exchange: {exchangeInfo: null, loadingExchange: false, errorExchange: null}
 };
 
 export const store = createStore(

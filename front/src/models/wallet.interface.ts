@@ -1,3 +1,4 @@
+import { Exchange } from './exchange.interface';
 export interface WalletI {
     _id: string;
     address: string;
@@ -8,5 +9,15 @@ export interface WalletI {
 }
 
 export interface WalletProps {
-    wallet: WalletI
+    wallet: WalletI;
+    exchange: Exchange;
+}
+
+export interface WalletSelectorProps {
+    exchange: Exchange;
+    etherBalance: string;
+}
+
+export interface WalletIsOldProps {
+    isOld: boolean;
 }

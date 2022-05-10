@@ -1,14 +1,18 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { combineLatest, map, Observable } from 'rxjs';
+import { catchError, combineLatest, map, Observable, of, tap } from 'rxjs';
+import { Exchange } from 'src/exchange/exchange.model';
 import { Wallet } from 'src/wallets/wallet.model';
 import { CreateWalletDto } from '../../wallets/dto/create-wallet.dto';
 import { DateService } from '../date/date.service';
 import { EtherscanNormalTransaction } from './api-data.interface';
+
 @Injectable()
 export class ApiDataService {
     private _apiKey: string = process.env.API_KEY;
     private _apiUrl: string = process.env.API_URL;
+    private _exchangeApiKey: string = process.env.CRYPTO_COMPARE_API_KEY;
+    private _exchangeUrl: string = `${process.env.CRYPTO_COMPARE_URL}&api_key=${this._exchangeApiKey}`;
 
     constructor(
         private http: HttpService,
@@ -48,7 +52,7 @@ export class ApiDataService {
             map((data: EtherscanNormalTransaction) => {
                return wallets.map(
                     (wallet: Wallet, index: number) => 
-                        (wallet.address === data.result[index].account) 
+                        (wallet?.address === data?.result?.[index].account) 
                         ? {
                             _id: wallet._id,
                             isOld: wallet.isOld,
@@ -69,5 +73,12 @@ export class ApiDataService {
             }),
         );
         
+    }
+
+    getExchangesFromTheApi(): Observable<Exchange> {
+        return this.http.get(this._exchangeUrl).pipe(
+            map(response => response.data),
+            catchError(err => of({'USD': 0, 'EUR': 0}))
+        );
     }
 }

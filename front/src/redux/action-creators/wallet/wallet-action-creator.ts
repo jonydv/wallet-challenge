@@ -3,17 +3,18 @@ import { Dispatch } from 'redux';
 import { WalletActionType } from '../../action-types';
 import { Action } from '../../actions';
 import { WalletI } from '../../../models/wallet.interface';
+import { successAlert, errorAlert } from '../../../helpers/generic-message-alert';
 
-const baseURL: string = 'http://localhost:4000';
+const baseURL: string = process.env.REACT_APP_BACK_URL!;
 
-export const getWallets = () => {
+export const getWallets = (sortedByFavorite: boolean) => {
     return async(dispatch: Dispatch<Action>) => {
         try{
             dispatch({
                 type: WalletActionType.WALLET_GET_ALL_REQUEST
             });
 
-            const { data } = await axios.get(`${baseURL}/wallets`);
+            const { data } = await axios.get(`${baseURL}/wallets?sortedByFavorite=${sortedByFavorite}`);
 
             dispatch({
                 type: WalletActionType.WALLET_GET_ALL_SUCCESS,
@@ -22,10 +23,11 @@ export const getWallets = () => {
         }catch(error: any){
             dispatch({
                 type: WalletActionType.WALLET_GET_ALL_FAIL,
-                payload: error.response && error.response.data.message
-                ? error.response.data.message
-                : error.message
-            })
+                payload: error?.response && error?.response?.data?.message
+                ? error?.response?.data?.message
+                : error?.message
+            });
+            errorAlert(error.message);
         }
     }
 }
@@ -52,13 +54,16 @@ export const createWallet = (address: string, name: string) =>{
                 type: WalletActionType.WALLET_CREATE_SUCCESS,
                 payload: data
             });
+            successAlert('Wallet created succefull');
+
         }catch(error: any){
             dispatch({
                 type: WalletActionType.WALLET_GET_ALL_FAIL,
                 payload: error.response && error.response.data.message
                 ? error.response.data.message
                 : error.message
-            })
+            });
+            errorAlert(error.message.includes('duplicate') ? 'The wallet already exist' : error.message);
         }
     }
 }
@@ -75,13 +80,15 @@ export const updateIsFavoriteWallet = (id: string) =>{
                 type: WalletActionType.WALLET_UPDATE_ISFAVORITE_SUCCESS,
                 payload: data
             });
+            successAlert('update wallet succefuly');
         }catch(error: any){
             dispatch({
                 type: WalletActionType.WALLET_UPDATE_ISFAVORITE_FAIL,
                 payload: error.response && error.response.data.message
                 ? error.response.data.message
                 : error.message
-            })
+            });
+            errorAlert(error.message);
         }
     }
 }
@@ -98,13 +105,15 @@ export const removeWallet = (id: string) =>{
                 type: WalletActionType.WALLET_REMOVE_SUCCESS,
                 payload: data
             });
+            successAlert('Wallet deleted succefull');
         }catch(error: any){
             dispatch({
                 type: WalletActionType.WALLET_REMOVE_FAIL,
                 payload: error.response && error.response.data.message
                 ? error.response.data.message
                 : error.message
-            })
+            });
+            successAlert('Added to favorite');
         }
     }
 }

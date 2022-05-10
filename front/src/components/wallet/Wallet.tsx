@@ -1,15 +1,20 @@
 import React, { useState }from 'react'
 import { WalletProps } from '../../models/wallet.interface';
-import Web3Utils from 'web3-utils';
 import './Wallet.scss';
 import { useActions } from '../../hooks/useActions';
+import { weiToEther } from '../../helpers/format-number';
+import WalletSelector from '../wallet-selector/WalletSelector';
+import WalletIsOld from '../wallet-is-old/WalletIsOld';
 
 
-const Wallet: React.FC<WalletProps> = ({wallet}) => {
-
+const Wallet: React.FC<WalletProps> = ({wallet, exchange}) => {
+  const inputTextError = 'Ingrese un número válido';
   const [ showEdit, setShowEdit ] = useState(false);
+  const [etherBalance, setEtherBalance] = useState(weiToEther(wallet.balance!));
+  const [etherBalanceInput, setEtherBalanceInput] = useState(weiToEther(wallet.balance!));
+  const [inputError, setInputError] = useState(false);
   const { updateIsFavoriteWallet, removeWallet } = useActions();
-
+  
   const updateFavorite = (walletId: string) => {
     updateIsFavoriteWallet(walletId);
   };
@@ -21,18 +26,26 @@ const Wallet: React.FC<WalletProps> = ({wallet}) => {
     setShowEdit(!showEdit);
   };
 
-  const rateHandler = () => {
+  const handleRate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEtherBalanceInput(e?.target?.value);
+    setInputError(false);
+  };
 
-  }
+
+  const toggleEtherBalance = () => {
+    if(Number(etherBalanceInput)< 0){
+      setInputError(true);
+      return;
+    }
+    setEtherBalance(etherBalanceInput);
+    setShowEdit(!showEdit);
+    setInputError(false);
+  };
+
   return (
     <div className="wallet">
     <h3 className="wallet__title">Wallet Name: {wallet.name}</h3>
-    {
-      wallet.isOld && 
-      <div className="alert alert-danger" role="alert">
-        <i className="fa-solid fa-triangle-exclamation"></i>  Wallet is old!
-      </div>
-    }
+      <WalletIsOld isOld={wallet.isOld}/>
       <div className="wallet__card">
         <div className="wallet__card-action">
           {
@@ -53,43 +66,32 @@ const Wallet: React.FC<WalletProps> = ({wallet}) => {
               ></i>
           </>
           }
-
-
-        
           {
-          showEdit && <>
-          <i 
-            className="fa-solid fa-check"
-            onClick={toggleShowEdit}
-          ></i> 
-          <i 
-            className="fa-solid fa-xmark"
-            onClick={toggleShowEdit}
-          ></i>
-          </>
+            showEdit && <>
+            <i 
+              className="fa-solid fa-check"
+              onClick={toggleEtherBalance}
+            ></i> 
+            <i 
+              className="fa-solid fa-xmark"
+              onClick={toggleShowEdit}
+            ></i>
+            </>
           }
         </div>
         <div className="wallet__card-content">
           {
             !showEdit ? 
-              <p className="wallet__card-content-info">{Web3Utils.fromWei(wallet.balance!, 'ether')}</p>
-            :
-              <input type="text" value={1.35} onChange={rateHandler}/>
-          }
-          
-
+              <p className="wallet__card-content-info">{etherBalance}</p>
+            :<>
+                <input type="number" value={etherBalanceInput} onChange={handleRate}/>
+                {inputError && <p className="text-danger">{inputTextError}</p>}
+              </>
+          } 
         </div>
       </div>
       <div className="wallet__card">
-          <div className="wallet__card-selector">
-            <select className="form-select" id="">
-              <option value="">USD</option>
-              <option value="">EUR</option>
-            </select>
-          </div>
-          <div className="wallet__card-content">
-            <p className="wallet__card-content-info">30$</p>
-          </div>
+        <WalletSelector key={etherBalance} exchange={exchange} etherBalance={etherBalance}/>
       </div>
     </div>
   );
