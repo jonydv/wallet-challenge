@@ -7,9 +7,19 @@ import { WalletAddressValidationPipe } from '../pipes/wallet-address-validation.
 export class WalletsController {
     constructor(private walletsService: WalletsService) {}
     @Get()
-    async getWallets(@Query('sortedByFavorite') sortedByFavorite: boolean) {
+    async getWallets() {
         try{
-            return await this.walletsService.getAllWallets(sortedByFavorite);
+            return await this.walletsService.getAllWallets();
+        }catch(error){
+            throw new HttpException(error.message, HttpStatus.CONFLICT);
+        }
+        
+    };
+
+    @Get('/sorted')
+    async getWalletsSorted() {
+        try{
+            return await this.walletsService.getAllWalletsSorted();
         }catch(error){
             throw new HttpException(error.message, HttpStatus.CONFLICT);
         }
