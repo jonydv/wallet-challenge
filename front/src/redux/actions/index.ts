@@ -15,6 +15,11 @@ import {
     RemoveWalletAction,
     RemoveWalletSuccessAction,
 } from './wallet/wallet-action'
+import { 
+    GetExchangeAction,
+    GetExchangeSuccessAction,
+    GetExchangeFailAction
+} from './exchange/exchange-action';
 
 export type Action = 
     GetAllWalletsAction |
@@ -32,4 +37,10 @@ export type Action =
     RemoveWalletAction |
     RemoveWalletSuccessAction |
     RemoveWalletFailAction
+;
+
+export type ExchangeAction = 
+    GetExchangeAction | 
+    GetExchangeSuccessAction |
+    GetExchangeFailAction
 ;

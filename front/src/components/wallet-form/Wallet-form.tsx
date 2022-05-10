@@ -19,8 +19,6 @@ const WalletForm: React.FC = () => {
 
   const submitWallet = (e: SyntheticEvent) => {
     e.preventDefault();
-    const w = Web3Utils.fromWei('351769074352266624264687', 'ether');
-    console.log({w});
     if(name.length < 3 || name.length > 20){
       setNameError(true);
       return;

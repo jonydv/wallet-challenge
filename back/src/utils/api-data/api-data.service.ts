@@ -52,7 +52,7 @@ export class ApiDataService {
             map((data: EtherscanNormalTransaction) => {
                return wallets.map(
                     (wallet: Wallet, index: number) => 
-                        (wallet.address === data.result[index].account) 
+                        (wallet?.address === data?.result?.[index].account) 
                         ? {
                             _id: wallet._id,
                             isOld: wallet.isOld,
@@ -78,7 +78,7 @@ export class ApiDataService {
     getExchangesFromTheApi(): Observable<Exchange> {
         return this.http.get(this._exchangeUrl).pipe(
             map(response => response.data),
-            catchError(err => of({USD: 0, EUR: 0}))
+            catchError(err => of({'USD': 0, 'EUR': 0}))
         );
     }
 }
