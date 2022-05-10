@@ -13,8 +13,8 @@ export const getWallets = (sortedByFavorite: boolean) => {
             dispatch({
                 type: WalletActionType.WALLET_GET_ALL_REQUEST
             });
-
-            const { data } = await axios.get(`${baseURL}/wallets?sortedByFavorite=${sortedByFavorite}`);
+            const url = sortedByFavorite ? `${baseURL}/wallets/sorted` : `${baseURL}/wallets`;
+            const { data } = await axios.get(url);
 
             dispatch({
                 type: WalletActionType.WALLET_GET_ALL_SUCCESS,
